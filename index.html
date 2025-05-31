@@ -133,7 +133,7 @@
         <div class="info-box">
           <strong style="font-size: 1.5rem;">CASINO SHELBY</strong><br>
           LA CASA SIEMPRE PAGA, ACTIVOS 24HS.<br><br>
-          <a class="whatsapp" href="https://wa.me/5491123386665" target="_blank">📱 CONTACTANOS AQUÍ</a>
+          <a class="whatsapp" href="https://wa.me/5491144203751" target="_blank">📱 CONTACTANOS AQUÍ</a>
         </div>
       </div>
     </div>
@@ -147,7 +147,7 @@
       <button id="spin">🎰 GIRAR LA RULETA 🎰</button>
       <div id="resultBox"></div>
       <div id="claimTextBox">📸 SACÁ CAPTURA Y RECLAMÁ TU PREMIOPREMIO😉</div>
-      <a class="whatsapp" href="https://wa.me/5491123386665" target="_blank">📸 RECLAMAR POR WHATSAPP</a>
+      <a class="whatsapp" href="https://wa.me/5491144203751" target="_blank">📸 RECLAMAR POR WHATSAPP</a>
     </div>
   </div>
 
@@ -253,7 +253,7 @@
         if (premio.label.includes("SIN PREMIO")) {
           resultBox.innerHTML = `😞 NO GANASTE ESTA VEZ... ¡PROBÁ MAÑANA!`;
           localStorage.setItem("lastSpinDate-shelby", today);
-        } else if (premio.label.includes("OTRO GIRO")) {
+        } else if (premio.label.includes("OTRO GIRO") && !extraSpinUsed) {
           resultBox.innerHTML = `🧨 TENÉS UNA SEGUNDA OPORTUNIDAD, ¡APROVECHALA!`;
           extraSpinUsed = true;
         } else {
