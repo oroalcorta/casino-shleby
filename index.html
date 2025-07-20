@@ -1,72 +1,68 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CASINO SHELBY</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🎩 CASINO SHELBY 🥃</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
   <style>
-    html, body {
+    body {
       margin: 0;
-      padding: 0;
-      min-height: 100vh;
-      background: linear-gradient(to bottom, #1c1c1c, #333, #111);
-      color: #f5f5f5;
-      font-family: 'Arial Black', sans-serif;
+      background: linear-gradient(to bottom, #1c1c1c, #2c2c2c);
+      color: #f0e6d2;
+      font-family: 'Georgia', serif;
       text-align: center;
     }
+
     .container {
+      max-width: 100%;
+      margin: auto;
+      padding: 20px;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: 20px;
     }
+
     h1 {
-      color: #bfa46f;
+      color: #d4af37;
       font-size: 4rem;
       margin: 2rem 0 1rem 0;
-      text-shadow: 2px 2px 4px #00000088;
+      text-shadow: 0 0 12px #f5deb3, 0 0 24px #8b4513;
     }
-    input {
+
+    input, button {
       width: 90%;
       padding: 1rem;
       font-size: 1.2rem;
       margin: 10px 0;
       border-radius: 10px;
-      border: 2px solid #555;
-      text-align: center;
-      background-color: #222;
-      color: #fff;
-    }
-    button {
-      background-color: #bfa46f;
-      color: black;
-      font-size: 1.3rem;
-      font-weight: bold;
-      padding: 0.8rem;
       border: none;
-      border-radius: 10px;
-      margin: 1rem 0;
-      cursor: pointer;
-      box-shadow: 2px 2px 6px #00000088;
+      text-align: center;
     }
-    #claimTextBox, #resultBox {
-      background-color: #f5f5f5;
-      color: #000;
-      padding: 1rem;
-      margin: 1rem auto;
-      border-radius: 10px;
-      width: 90%;
-      max-width: 500px;
-      box-shadow: 2px 2px 6px #00000088;
-      font-size: 1.2rem;
+
+    button {
+      background: linear-gradient(45deg, #654321, #d4af37);
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 0 10px #d4af37;
+      transition: transform 0.2s ease;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+    }
+
+    #claimText {
+      margin-top: 1rem;
+      font-size: 1.1rem;
       font-weight: bold;
     }
-    #resultBox {
-      display: none;
-    }
+
     .whatsapp {
-      background-color: #444;
+      background-color: #25D366;
       color: white;
       padding: 0.8rem 1.5rem;
       border-radius: 10px;
@@ -74,207 +70,250 @@
       font-weight: bold;
       display: inline-block;
       margin-top: 1rem;
-      box-shadow: 2px 2px 6px #00000088;
+      box-shadow: 0 0 10px #25D366;
     }
+
     canvas {
       width: 80vw;
       max-width: 360px;
       height: auto;
-      border: 8px solid #bfa46f;
+      border: 10px dashed #d4af37;
       border-radius: 50%;
       margin: 1rem auto;
       display: block;
-      background-color: #111;
+      background: radial-gradient(circle, #3b3b3b, #1c1c1c);
+      box-shadow: 0 0 20px #d4af37, 0 0 15px #fff inset;
     }
+
     #arrow {
       width: 0;
       height: 0;
       border-left: 15px solid transparent;
       border-right: 15px solid transparent;
-      border-top: 25px solid #bfa46f;
+      border-top: 25px solid red;
       margin: auto;
     }
-    #fechaHoraActual, #userLabel, #casinoHeader {
+
+    #fechaHoraActual, #userLabel, #casinoHeader, #result {
       font-weight: bold;
       margin: 10px 0;
     }
-    #fechaHoraActual, #userLabel {
-      color: #ddd;
+
+    #fechaHoraActual {
       font-size: 1.3rem;
     }
+
+    #userLabel {
+      font-size: 1.6rem;
+    }
+
     #casinoHeader {
       font-size: 2rem;
-      color: #bfa46f;
-      text-shadow: 1px 1px 2px #00000066;
+      color: #d4af37;
+      margin-top: 1rem;
+      text-shadow: 0 0 8px #f5deb3;
     }
-    .info-box-wrapper {
-      margin-top: 250px;
-    }
-    .info-box {
-      background: #f5f5f5;
-      color: #000;
-      border-radius: 10px;
-      padding: 1rem;
-      width: 90%;
-      margin: 0 auto;
-      box-shadow: 2px 2px 6px #00000088;
+
+    #result {
+      font-size: 1.5rem;
+      margin-top: 1rem;
+      color: #f0e6d2;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <div id="userSection" style="display: flex; flex-direction: column; flex: 1;">
-      <div>
-        <h1>CASINO SHELBY</h1>
-        <input id="usernameInput" placeholder="INGRESÁ TU USUARIO">
-        <button onclick="startGame()">CONTINUAR</button>
-      </div>
-      <div class="info-box-wrapper">
-        <div class="info-box">
-          <strong style="font-size: 1.5rem;">CASINO SHELBY</strong><br>
-          LA CASA SIEMPRE PAGA, ACTIVOS 24HS.<br><br>
-          <a class="whatsapp" href="https://wa.me/5491144203751" target="_blank">📱 CONTACTANOS AQUÍ</a>
-        </div>
-      </div>
+    <div id="userSection">
+      <h1>🎩 CASINO SHELBY 🥃</h1>
+      <input id="usernameInput" placeholder="🗡️ INGRESÁ TU USUARIO 💷" />
+      <button onclick="startGame()">🚬 ENTRAR AL CASINO 🔫</button>
+      <div class="info-box-wrapper" style="margin-top: 260px;">
+  <div class="info-box" style="background: #2b2b2b; color: #d4af37; box-shadow: 0 0 12px #d4af37;">
+    <strong style="font-size: 2rem;">🎩 CASINO SHELBY 🥃</strong><br />
+    ❝ No apuestes si no estás dispuesto a perder. ❞<br />
+    <br /><br />
+    📞 24HS EN LÍNEA<br />
+    <a class="whatsapp" href="https://wa.me/5491144203751" target="_blank">📞 CONTACTO WHATSAPP</a>
+  </div>
+</div>
     </div>
 
     <div id="wheelSection" style="display: none;">
-      <div id="casinoHeader">CASINO SHELBY</div>
+      <div id="casinoHeader">⚔️ LA SUERTE ESTÁ ECHADA, SHELBY... 💷</div>
       <div id="userLabel"></div>
       <div id="fechaHoraActual"></div>
       <div id="arrow"></div>
       <canvas id="canvas" width="500" height="500"></canvas>
-      <button id="spin">🎰 GIRAR LA RULETA 🎰</button>
-      <div id="resultBox"></div>
-      <div id="claimTextBox">📸 SACÁ CAPTURA Y RECLAMÁ TU PREMIOPREMIO😉</div>
-      <a class="whatsapp" href="https://wa.me/5491144203751" target="_blank">📸 RECLAMAR POR WHATSAPP</a>
+      <button id="spin">🎰 GIRAR RULETA 🥃</button>
+      <div id="result"></div>
+      <div id="claimText">📸 GUARDÁ TU PREMIO Y RECLAMALO 🎁</div>
+      <a class="whatsapp" href="https://wa.me/5491144203751" target="_blank">📞 RECLAMAR PREMIO</a>
     </div>
   </div>
 
-  <audio id="spinSound" src="https://www.soundjay.com/misc/sounds/slot-machine-1.mp3"></audio>
-  <audio id="winSound" src="https://www.soundjay.com/human/sounds/applause-8.mp3"></audio>
+<script>
+const premios = [
+  { label: "20 % BONI 💷", color: "#8b4513", prob: 30 },
+  { label: "50 % BONI ⚔️", color: "#a0522d", prob: 26 },
+  { label: "OTRO GIRO 🔁", color: "#3b3b3b", prob: 0 },
+  { label: "2.500 GRATIS 💵", color: "#cd853f", prob: 16 },
+  { label: "5.000 GRATIS 🧨", color: "#5c4033", prob: 6 },
+  { label: "10.000 GRATIS 🥃", color: "#daa520", prob: 1 },
+  { label: "100 % BONI 🔫", color: "#b8860b", prob: 21 },
+  { label: "50.000 GRATIS 🎩", color: "#000000", prob: 0 }
+];
 
-  <script>
-  const premios = [
-    { label: "💼 200% BONIF.", color: "#bfa46f", prob: 1 },
-    { label: "🥃 2.500 GRATIS", color: "#9933ff", prob: 23 },
-    { label: "🎩 100% BONIF.", color: "#FFD700", prob: 9 },
-    { label: "🧨 OTRO GIRO", color: "#00ccff", prob: 0 },
-    { label: "🔫 10.000 GRATIS", color: "#ff6600", prob: 3 },
-    { label: "💰 50% BONIF.", color: "#00cc44", prob: 23 },
-    { label: "🚫 SIN PREMIO", color: "#555555", prob: 9 },
-    { label: "👞 20% BONIF.", color: "#ff9900", prob: 33 }
-  ];
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+const radius = canvas.width / 2;
+let isSpinning = false;
 
-  const canvas = document.getElementById("canvas");
-  const ctx = canvas.getContext("2d");
-  const radius = canvas.width / 2;
-  let username = "";
-  let extraSpinUsed = false;
-  let isSpinning = false; // ✅ NUEVA variable para bloquear
+function drawWheel() {
+  const arc = 2 * Math.PI / premios.length;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.save();
+  ctx.translate(radius, radius);
+  ctx.rotate(0);
+  ctx.translate(-radius, -radius);
 
-  function drawWheel() {
-    const arc = 2 * Math.PI / premios.length;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  for (let i = 0; i < premios.length; i++) {
+    const start = i * arc;
+    const end = start + arc;
+    ctx.beginPath();
+    ctx.moveTo(radius, radius);
+    ctx.fillStyle = premios[i].color;
+    ctx.arc(radius, radius, radius, start, end);
+    ctx.fill();
     ctx.save();
     ctx.translate(radius, radius);
-    ctx.rotate(0);
-    ctx.translate(-radius, -radius);
-    for (let i = 0; i < premios.length; i++) {
-      const start = i * arc;
-      const end = start + arc;
-      ctx.beginPath();
-      ctx.moveTo(radius, radius);
-      ctx.fillStyle = premios[i].color;
-      ctx.arc(radius, radius, radius, start, end);
-      ctx.fill();
-      ctx.save();
-      ctx.translate(radius, radius);
-      ctx.rotate(start + arc / 2);
-      ctx.textAlign = "right";
-      ctx.fillStyle = "white";
-      ctx.font = "bold 20px Arial";
-      ctx.fillText(premios[i].label.toUpperCase(), radius - 10, 5);
-      ctx.restore();
-    }
+    ctx.rotate(start + arc / 2);
+    ctx.textAlign = "right";
+    ctx.fillStyle = "white";
+    ctx.font = "bold 22px Georgia";
+    ctx.fillText(premios[i].label.toUpperCase(), radius - 10, 10);
     ctx.restore();
   }
+  ctx.restore();
+}
 
-  function startGame() {
-    const input = document.getElementById("usernameInput");
-    username = input.value.trim();
-    if (!username) {
-      input.style.border = "3px solid red";
-      return;
+const SUPABASE_URL = 'https://wpoutjkljkrbliikazkh.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indwb3V0amtsamtyYmxpaWthemtoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI5ODAxMjAsImV4cCI6MjA2ODU1NjEyMH0.8aZys2dBiNbLis7ls7ZwiBt25eWbsSvSzjpO21Al2r8';
+const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const hoy = new Date().toISOString().split('T')[0];
+let fingerprint = "";
+let username = "";
+let casino = "CASINO SHELBY"; // 👈 nombre de este casino
+
+let fpReady = FingerprintJS.load().then(fp => fp.get().then(result => {
+  fingerprint = result.visitorId;
+}));
+
+async function yaJugoHoy() {
+  await fpReady;
+  while (!fingerprint) await new Promise(r => setTimeout(r, 50));
+  try {
+    const { data, error } = await client
+      .from('giros')
+      .select('premio, usuario')
+      .eq('fecha', hoy)
+      .eq('casino', casino)
+      .eq('fingerprint', fingerprint)
+      .order('hora', { ascending: true })
+      .limit(1)
+      .maybeSingle();
+
+    if (error) {
+      console.error("❌ Error consultando Supabase:", error);
+      return null;
     }
-    document.getElementById("userSection").style.display = "none";
-    document.getElementById("wheelSection").style.display = "block";
-    document.getElementById("userLabel").innerHTML = `<strong>USUARIO: ${username.toUpperCase()}</strong>`;
-    const now = new Date();
-    document.getElementById("fechaHoraActual").innerHTML = `📅 ${now.toLocaleDateString()} ⏰ ${now.toLocaleTimeString()}`;
-    drawWheel();
+
+    return data ? { premio: data.premio, usuarioReal: data.usuario } : null;
+  } catch (e) {
+    console.error("❌ Excepción en yaJugoHoy:", e);
+    return null;
+  }
+}
+
+async function registrarGiro(premio) {
+  const hora = new Date().toISOString();
+  await client.from('giros').insert([{
+    usuario: username,
+    fingerprint,
+    premio,
+    fecha: hoy,
+    hora,
+    casino
+  }]);
+}
+
+let premioYaJugado = null;
+
+async function startGame() {
+  const input = document.getElementById("usernameInput");
+  username = input.value.trim();
+  if (!username) return input.style.border = "3px solid red";
+
+  await fpReady;
+  while (!fingerprint) await new Promise(res => setTimeout(res, 50));
+
+  premioYaJugado = await yaJugoHoy();
+
+  document.getElementById("userSection").style.display = "none";
+  document.getElementById("wheelSection").style.display = "block";
+
+  const now = new Date();
+  document.getElementById("fechaHoraActual").innerHTML = `📅 ${now.toLocaleDateString()} ⏰ ${now.toLocaleTimeString()}`;
+  drawWheel();
+
+  if (premioYaJugado) {
+    const { premio, usuarioReal } = premioYaJugado;
+    document.getElementById("userLabel").innerHTML = `🔐 USUARIO: <strong>${usuarioReal.toUpperCase()}</strong>`;
+    document.getElementById("result").innerHTML = `🛑 YA JUGASTE HOY COMO <strong>${usuarioReal.toUpperCase()}</strong> Y GANASTE: <strong>${premio}</strong>.`;
+    document.getElementById("spin").disabled = true;
+    document.getElementById("spin").style.opacity = "0.6";
+  } else {
+    document.getElementById("userLabel").innerHTML = `👤 USUARIO: <strong>${username.toUpperCase()}</strong>`;
+  }
+}
+
+document.getElementById("spin").addEventListener("click", async () => {
+  if (isSpinning || premioYaJugado) return;
+
+  const spinBtn = document.getElementById("spin");
+  const result = document.getElementById("result");
+  result.innerHTML = "";
+  isSpinning = true;
+  spinBtn.disabled = true;
+
+  let totalProb = premios.reduce((a, p) => a + p.prob, 0);
+  let rand = Math.random() * totalProb;
+  let acc = 0, selected = 0;
+  for (let i = 0; i < premios.length; i++) {
+    acc += premios[i].prob;
+    if (rand < acc) {
+      selected = i;
+      break;
+    }
   }
 
-  document.getElementById("spin").addEventListener("click", () => {
-    if (isSpinning) return; // ✅ Bloqueo doble click
-    isSpinning = true;
+  const anglePerSlice = 360 / premios.length;
+  const offsetToTop = 270;
+  const degreesToRotate = 360 * 5 + (offsetToTop - (selected * anglePerSlice + anglePerSlice / 2));
 
-    const spinButton = document.getElementById("spin");
-    spinButton.disabled = true;
+  canvas.style.transition = "transform 6s cubic-bezier(0.25, 1, 0.5, 1)";
+  canvas.style.transform = `rotate(${degreesToRotate}deg)`;
 
-    const lastSpin = localStorage.getItem("lastSpinDate-shelby");
-    const today = new Date().toLocaleDateString();
-    const resultBox = document.getElementById("resultBox");
-    resultBox.style.display = "block";
-
-    if (lastSpin === today && !extraSpinUsed) {
-      resultBox.innerHTML = `❌‼️ YA USASTE TU GIRO HOY ‼️❌, VOLVÉ MAÑANA😁🎰.`;
-      isSpinning = false;
-      spinButton.disabled = false;
-      return;
-    }
-
-    resultBox.innerHTML = "";
-    const spinSound = document.getElementById("spinSound");
-    const winSound = document.getElementById("winSound");
-    spinSound.play();
-
-    let totalProb = premios.reduce((a, p) => a + p.prob, 0);
-    let rand = Math.random() * totalProb;
-    let acc = 0, selected = 0;
-    for (let i = 0; i < premios.length; i++) {
-      acc += premios[i].prob;
-      if (rand < acc) {
-        selected = i;
-        break;
-      }
-    }
-
-    const anglePerSlice = 360 / premios.length;
-    const offsetToTop = 270;
-    const degreesToRotate = 360 * 5 + (offsetToTop - (selected * anglePerSlice + anglePerSlice / 2));
-
-    canvas.style.transition = "transform 6s cubic-bezier(0.25, 1, 0.5, 1)";
-    canvas.style.transform = `rotate(${degreesToRotate}deg)`;
-
-    setTimeout(() => {
-      const premio = premios[selected];
-      if (premio.label.includes("SIN PREMIO")) {
-        resultBox.innerHTML = `😞 NO GANASTE ESTA VEZ... ¡PROBÁ MAÑANA!`;
-        localStorage.setItem("lastSpinDate-shelby", today);
-      } else if (premio.label.includes("OTRO GIRO") && !extraSpinUsed) {
-        resultBox.innerHTML = `🧨 TENÉS UNA SEGUNDA OPORTUNIDAD, ¡APROVECHALA!`;
-        extraSpinUsed = true;
-      } else {
-        winSound.play();
-        resultBox.innerHTML = `🎉 <strong>¡FELICIDADES!</strong> GANASTE: <strong>${premio.label.toUpperCase()}</strong> 🎊`;
-        localStorage.setItem("lastSpinDate-shelby", today);
-      }
-
-      isSpinning = false;            // ✅ Libera el botón
-      spinButton.disabled = false;  // ✅ Lo vuelve a activar
-    }, 6100);
-  });
+  setTimeout(async () => {
+    const premio = premios[selected];
+    result.innerHTML = `🎉 ¡FELICIDADES! GANASTE: <strong>${premio.label}</strong>`;
+    await registrarGiro(premio.label);
+    premioYaJugado = premio.label;
+    spinBtn.disabled = true;
+    spinBtn.style.opacity = "0.6";
+    isSpinning = false;
+  }, 6100);
+});
 </script>
 </body>
 </html>
