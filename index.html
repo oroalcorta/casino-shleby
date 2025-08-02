@@ -214,13 +214,10 @@ let fpReady = FingerprintJS.load().then(fp => fp.get().then(result => {
 async function yaJugoHoy() {
   await fpReady;
   while (!fingerprint) await new Promise(r => setTimeout(r, 50));
-
-  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-
   try {
     const { data, error } = await client
       .from('giros')
-      .select('premio, usuario, fingerprint')
+      .select('premio, usuario')
       .eq('fecha', hoy)
       .eq('casino', casino)
       .or(`usuario.eq.${username},fingerprint.eq.${fingerprint}`)
@@ -232,21 +229,7 @@ async function yaJugoHoy() {
       return null;
     }
 
-    if (!isSafari) {
-      return data ? { premio: data.premio, usuarioReal: data.usuario } : null;
-    }
-
-    if (data && data.usuario === username) {
-      return { premio: data.premio, usuarioReal: data.usuario };
-    }
-
-    if (data && data.usuario !== username) {
-      // Safari con fingerprint repetido pero usuario nuevo → dejar tirar solo una vez
-      console.warn("⚠️ Safari: fingerprint ya usado, pero con usuario nuevo. Permitido 1ra vez.");
-      return null;
-    }
-
-    return null; // no hay registros → dejar jugar
+    return data ? { premio: data.premio, usuarioReal: data.usuario } : null;
   } catch (e) {
     console.error("❌ Excepción en yaJugoHoy:", e);
     return null;
